@@ -1,7 +1,10 @@
 
+//This variable keeps track of whose turn it is. 
 let activePlayer = 'X'; 
+//This array stores an array of moves. We use this to determine win conditions. 
 let selectedSquares = [];
 
+//This function is for placing an x or o in a square. 
 function placeXOrO (squareNumber) {
     if (!selectedSquares.some (element => element.includes (squareNumber))) { 
        let select = document.getElementById(squareNumber); 
@@ -11,17 +14,22 @@ function placeXOrO (squareNumber) {
            select.style.backgroundImage = 'url("images/o.png")';
     }
    
+    //squareNumber and activePlayer are concatenated together and added to array. 
     selectedSquares. push (squareNumber + activePlayer); 
+     //This calls a function to check for any win conditions. 
     checkWinConditions(); 
-        if (activePlayer === 'X') {    
-            activePlayer = '0'; 
-        } else {
-            activePlayer = 'X';
-        }
+    //This condition is for changing the active player. 
+    if (activePlayer === 'X') {    
+        activePlayer = 'O'; 
+    } else {
+        activePlayer = 'X';
+    }
     
+    //This function plays placement sound.
     audio ('./media/place.mp3'); 
     
-    if(activePlayer === '0'){
+    //This condition checks to see if it is computers turn.
+    if(activePlayer === 'O'){
     disableClick(); 
     setTimeout(function () { computersTurn(); }, 1000)
     }
@@ -56,9 +64,9 @@ function checkWinConditions() {
     else if (arrayIncludes ('3X', '4X', '5X')) { drawWinLine (50, 304, 558, 304) } 
     // X 6, 7, 8 condition. 
     else if (arrayIncludes ('6X', '7X', '8X')) { drawWinLine (50, 508, 558, 508) } 
-    // X0, 3, 6 condition. 
+    // X 0, 3, 6 condition. 
     else if (arrayIncludes ('0X', '3X', '6X')) { drawWinLine (100, 50, 100, 558) } 
-    // XI, 4, 7 condition. 
+    // X 1, 4, 7 condition. 
     else if (arrayIncludes ('1X', '4X', '7X')) { drawWinLine (304, 50, 304, 558) } 
     // X 2, 5, 8 condition. 
     else if (arrayIncludes('2X', '5X', '8X')) { drawWinLine (508, 50, 508, 558) } 
@@ -88,7 +96,7 @@ function checkWinConditions() {
         //This function playes the tie game sound. 
         audio ('./media/tie.mp3'); 
         // This function sets a .3 second timer before the resetGame is called. 
-        setTimeout(function () { resetGame(); }, 1000);
+        setTimeout(function () { resetGame(); }, 10000);
     }
 
     // This function checks if an array includes 3 strings. It is used to check for 
@@ -104,16 +112,19 @@ function arrayIncludes (squareA, squareB, squarec) {
     }
 }
 
+//This function makes the body element temporarily unclickable
 function disableClick() {
     body.style.pointerEvents = "none";
     setTimeout (function () {body.style.pointerEvents = 'auto';},1000);
 }
 
+//This function takes a string parameter of the path you set to placement sound
 function audio(audioURL) {
     let audio = new Audio(audioURL);
     audio.play();
 }
 
+//This function draws the line on win
 function drawWinLine(coordX1, coordY1, coordX2, coordY2) {
     const canvas = document.getElementById('win-lines')
     const c = canvas.getContext('2d')
@@ -144,7 +155,7 @@ function drawWinLine(coordX1, coordY1, coordX2, coordY2) {
             if (x >= x2 && y <= y2) { cancelAnimationFrame(animationLoop);}
         }
     }
-
+    //This function clears the canvas after a win
     function clear () {
         const animationLoop = requestAnimationFrame(clear);
         c.clearRect (0,0,608,608);
